@@ -121,7 +121,7 @@ def state() -> dict[str, Any]:
 
 def main() -> None:
     port = int(os.getenv("PORT", "7860"))
-    uvicorn.run("server.app:app", host="0.0.0.0", port=port, log_level="info")
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
 
 
 if __name__ == "__main__":
