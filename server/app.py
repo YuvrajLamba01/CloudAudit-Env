@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
@@ -87,7 +87,7 @@ def mcp(request: MCPRequest | dict[str, Any]) -> dict[str, Any]:
 
 
 @app.post("/reset")
-def reset(request: ResetRequest | None = None) -> dict[str, Any]:
+def reset(request: ResetRequest = Body(default=ResetRequest())) -> dict[str, Any]:
     task_id = request.task_id if request else None
     try:
         observation = ENV.reset(task_id=task_id)
