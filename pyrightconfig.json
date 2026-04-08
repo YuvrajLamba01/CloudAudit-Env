@@ -1,0 +1,7 @@
+{
+  "include": ["env", "server", "*.py"],
+  "extraPaths": ["."],
+  "venvPath": ".",
+  "venv": ".venv",
+  "typeCheckingMode": "basic"
+}

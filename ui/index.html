@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CloudAuditEnv Control Center</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-a"></div>
+  <div class="bg-glow bg-glow-b"></div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <span class="logo">◢</span>
+      <div>
+        <h1>CloudAuditEnv</h1>
+        <p>Security Remediation Command</p>
+      </div>
+    </div>
+    <div class="pill-row">
+      <span class="pill">OpenEnv</span>
+      <span class="pill">Demo View</span>
+      <span class="pill online" id="health-pill">Connecting...</span>
+    </div>
+  </header>
+
+  <section class="overview-strip">
+    <article class="overview-card glass">
+      <span class="overview-step">1</span>
+      <div>
+        <h3>Select Task</h3>
+        <p>Pick a task from the dropdown.</p>
+      </div>
+    </article>
+    <article class="overview-card glass">
+      <span class="overview-step">2</span>
+      <div>
+        <h3>Run Step</h3>
+        <p>Click Next Best Step or Run Task Auto to act on the task.</p>
+      </div>
+    </article>
+    <article class="overview-card glass">
+      <span class="overview-step">3</span>
+      <div>
+        <h3>Read Results</h3>
+        <p>Watch score, status, timeline, and workflow highlights update live.</p>
+      </div>
+    </article>
+  </section>
+
+  <main class="layout">
+    <section class="panel glass controls">
+      <h2>Mission Setup</h2>
+
+      <div class="workflow-card">
+        <h3>Project Workflow</h3>
+        <div class="workflow-steps">
+          <div class="workflow-step" id="wf-start">1 Start</div>
+          <div class="workflow-step" id="wf-scan">2 Scan</div>
+          <div class="workflow-step" id="wf-fix">3 Fix</div>
+          <div class="workflow-step" id="wf-verify">4 Verify</div>
+          <div class="workflow-step" id="wf-done">5 Done</div>
+        </div>
+        <p class="workflow-caption" id="workflow-caption">Select a task, then follow the stage highlights.</p>
+      </div>
+
+      <label for="task-select">Task <span class="tip" data-tip="Pick the benchmark scenario you want to run.">?</span></label>
+      <select id="task-select">
+        <option value="" selected>loading tasks...</option>
+      </select>
+
+      <div class="action-group">
+        <h3>Primary Controls</h3>
+        <div class="button-stack">
+          <button id="reset-btn" class="btn btn-primary">Start Selected Task</button>
+          <button id="quick-next-btn" class="btn">Next Best Step</button>
+        </div>
+      </div>
+
+      <div class="action-group">
+        <h3>Automation <span class="group-badge recommended">Recommended</span></h3>
+        <div class="button-stack">
+          <button id="auto-btn" class="btn btn-ghost">Run Task Auto</button>
+          <button id="demo-mode-btn" class="btn btn-primary btn-demo">Demo Mode</button>
+        </div>
+      </div>
+
+      <div class="action-group action-group-utility">
+        <h3>Utility</h3>
+        <div class="button-stack">
+          <button id="refresh-btn" class="btn btn-ghost">Refresh State</button>
+        </div>
+      </div>
+
+      <div id="what-happened" class="what-happened">Status: waiting for action.</div>
+
+      <div class="progress-card">
+        <div class="progress-row">
+          <span>Auto Progress</span>
+          <span id="auto-progress-text">0 / 0</span>
+        </div>
+        <div class="progress-track">
+          <div id="auto-progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <details class="advanced-controls">
+        <summary>Advanced Manual Controls</summary>
+        <label for="action-select">Action</label>
+        <select id="action-select">
+          <option value="" selected>loading actions...</option>
+        </select>
+
+        <label for="resource-input">Target Resource (optional for scan/noop)</label>
+        <input id="resource-input" placeholder="e.g. resource-id">
+
+        <div class="button-row">
+          <button id="step-btn" class="btn">Run Selected Action</button>
+        </div>
+      </details>
+
+      <div class="demo-results" id="demo-results-wrap">
+        <h3>Demo Results</h3>
+        <div id="demo-results-list" class="demo-results-list">
+          <div class="demo-result-item">No demo run yet.</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <h3>Execution Notes</h3>
+        <ul>
+          <li>Scan first to discover issues.</li>
+          <li>Some tasks require a final verification scan.</li>
+          <li>Invalid actions lower correctness score.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="center-stack">
+      <section class="kpi-grid">
+        <article class="kpi glass tilt">
+          <h3>Score</h3>
+          <p id="score-val">0.00</p>
+        </article>
+        <article class="kpi glass tilt">
+          <h3>Step</h3>
+          <p id="step-val">0</p>
+        </article>
+        <article class="kpi glass tilt">
+          <h3>Discovered</h3>
+          <p id="discovered-val">no</p>
+        </article>
+        <article class="kpi glass tilt">
+          <h3>Pending Verification</h3>
+          <p id="verification-val">no</p>
+        </article>
+      </section>
+
+      <section class="panel glass timeline-panel">
+        <div class="timeline-header">
+          <h2>Replay Timeline <span class="tip" data-tip="Chronological action trace with timestamps, rewards, and score progression.">?</span></h2>
+          <button id="clear-timeline-btn" class="btn btn-ghost timeline-clear-btn">Clear</button>
+        </div>
+        <div id="timeline-track" class="timeline-track">
+          <div class="timeline-item muted">Timeline appears as actions run.</div>
+        </div>
+      </section>
+
+      <section class="panel glass resources">
+        <h2>Infrastructure Status</h2>
+        <div id="resource-cards" class="resource-cards"></div>
+      </section>
+
+      <section class="panel glass issues">
+        <h2>Issue Board</h2>
+        <div id="issues-wrap" class="issues-wrap"></div>
+      </section>
+    </section>
+
+    <section class="panel glass rightbar">
+      <h2>Action Log</h2>
+      <div id="log-wrap" class="log-wrap"></div>
+
+      <h2>Score Breakdown</h2>
+      <div id="breakdown-wrap" class="breakdown-wrap"></div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

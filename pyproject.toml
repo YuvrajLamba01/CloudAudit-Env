@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloud-audit-env"
+version = "1.0.0"
+description = "An OpenEnv environment for cloud security auditing and remediation of infrastructure misconfigurations."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+  "openenv>=0.1.13",
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.34.0",
+  "pydantic>=2.10.0",
+  "PyYAML>=6.0.2",
+  "openai>=1.60.0",
+  "requests>=2.32.0",
+  "typer>=0.15.0",
+]
+
+[project.scripts]
+server = "server.app:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["env*", "server*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

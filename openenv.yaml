@@ -1,0 +1,40 @@
+name: CloudAuditEnv
+version: 1.0.0
+description: >
+  CloudAuditEnv is a real-world OpenEnv simulation where an AI agent audits cloud
+  infrastructure and remediates security misconfigurations safely and efficiently.
+tags:
+  - openenv
+  - cloud-security
+  - audit
+  - remediation
+mode: simulation
+entrypoint: server.app:main
+action_space:
+  type: object
+  actions:
+    - scan_resources
+    - fix_s3_public_access
+    - encrypt_database
+    - restrict_security_group
+    - update_iam_policy
+    - noop
+observation_space:
+  fields:
+    - current_issues
+    - resource_state
+    - previous_actions
+    - progress_score
+space:
+  sdk: docker
+  app_port: 7860
+tasks:
+  - id: easy_public_s3
+    difficulty: easy
+    title: Fix a publicly exposed S3 bucket
+  - id: medium_network_data
+    difficulty: medium
+    title: Remediate database encryption and open network ingress
+  - id: hard_full_stack
+    difficulty: hard
+    title: Resolve interconnected cloud posture failures
