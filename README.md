@@ -28,19 +28,35 @@ CloudAuditEnv turns this workflow into a deterministic environment for benchmark
 
 ## Project Structure
 
-- env/environment.py: core environment (`reset`, `step`, `state`)
-- env/models.py: typed Pydantic models for action, observation, reward, and state
-- env/tasks.py: task definitions (easy, medium, hard)
-- env/graders.py: deterministic scoring in [0.0, 1.0]
-- inference.py: baseline runner with strict `[START]/[STEP]/[END]` logs
-- baseline.py: deterministic local heuristic baseline runner
-- baseline_results.json: generated baseline score artifact
-- server/app.py: HTTP OpenEnv runtime endpoints
-- ui/: frontend files (`index.html`, `style.css`, `app.js`)
-- server/app.py serves the frontend root and static assets from `ui/`
-- .env / .env.example: local secret and runtime configuration template
-- openenv.yaml: environment metadata and task catalog
-- Dockerfile: container build and runtime
+```text
+project-root/
+│
+├── env/
+│   ├── environment.py        # Core environment (reset, step, state handling)
+│   ├── models.py             # Pydantic models (Action, Observation, Reward, State)
+│   ├── tasks.py              # Task definitions (easy, medium, hard)
+│   └── graders.py            # Deterministic scoring logic [0.0 - 1.0]
+│
+├── server/
+│   └── app.py                # OpenEnv HTTP server + serves frontend
+│
+├── ui/
+│   ├── index.html            # Main frontend entry
+│   ├── style.css             # Styling
+│   └── app.js                # Frontend logic
+│
+├── inference.py              # Baseline runner with [START]/[STEP]/[END] logs
+├── baseline.py               # Deterministic heuristic baseline
+├── baseline_results.json     # Generated baseline results
+│
+├── .env                      # Local secrets (ignored in git)
+├── .env.example              # Environment variable template
+│
+├── openenv.yaml              # Environment metadata & task catalog
+├── Dockerfile                # Container build & runtime setup
+│
+└── README.md                 # Project documentation
+```
 
 ## Action Space
 
