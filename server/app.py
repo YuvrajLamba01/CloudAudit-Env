@@ -87,9 +87,10 @@ def mcp(request: MCPRequest | dict[str, Any]) -> dict[str, Any]:
 
 
 @app.post("/reset")
-def reset(request: ResetRequest) -> dict[str, Any]:
+def reset(request: ResetRequest | None = None) -> dict[str, Any]:
+    task_id = request.task_id if request else None
     try:
-        observation = ENV.reset(task_id=request.task_id)
+        observation = ENV.reset(task_id=task_id)
     except KeyError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
